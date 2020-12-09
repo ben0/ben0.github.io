@@ -93,7 +93,7 @@ analytics:
 
 # Site Author
 author:
-  name             : "James Benson""
+  name             : "James Benson"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Still learning!"
   location         : "0x7f9dcc3d45d0"

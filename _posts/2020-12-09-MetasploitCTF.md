@@ -1,3 +1,8 @@
+---
+layout: post
+title:  "Metasploit CTF December 2020"
+---
+
 # Metasploit CTF December 2020
 
 Over the last weekend I had a little time to participate in the Metasploit CTF 2020, and one particular challenge I found quite interesting mainly becuase the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...

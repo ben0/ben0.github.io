@@ -86,7 +86,7 @@ We've created and compiled a shared object library, abused the vpn_connect binar
 
 ### Next steps
 
-The shared object isn't perfect, but we could improve it by removing some of the printf statements and deleting `/etc/ld.so.preload` to stop those nagging error messages:
+The shared object isn't perfect, but we could improve it by removing some of the printf statements and deleting `/etc/ld.so.preload` to stop those nagging error messages next time a command is run.
 
 ```
 #include <stdio.h>

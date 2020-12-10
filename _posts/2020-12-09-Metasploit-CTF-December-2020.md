@@ -3,7 +3,7 @@ layout: single
 title: "Metasploit CTF: 'Ace of Clubs'"
 ---
 
-Over the last weekend I had a little time to participate in the Metasploit CTF 2020, and one particular challenge I found quite interesting mainly becuase the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...
+Over the last weekend I had a little time to participate in the Metasploit CTF 2020, and one particular challenge I found quite interesting mainly because the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...
 
 ## Challenge: Ace of Clubs
 
@@ -21,7 +21,7 @@ Using NM we can list the symbols in the files, grepping for T or t, symbols in t
 
 ![alt text](https://ben0.github.io/assets/images//9009_nm.PNG "Binary symbols")
 
-Running the binary we're prompted with usage instructions, the binary requires a user, password, and a log path. Let see if we can get the username & password using GDB, I use pwndbg which is pretty great for any sort of reverse engineering, I highly recommened it. We can set the binary arguments, and set execute to break when it hits the authenticate function:
+Running the binary we're prompted with usage instructions, the binary requires a user, password, and a log path. Let see if we can get the username & password using GDB, I use pwndbg which is pretty great for any sort of reverse engineering, I highly recommend it. We can set the binary arguments, and set execute to break when it hits the authenticate function:
 
 ![alt text](https://ben0.github.io/assets/images//9009_gdbstart.PNG "GDB")
 
@@ -42,7 +42,7 @@ As the binary is running as root we effectively have an arbitrary write to any f
 
 The binary uses a shared library to provide the `authenticate` function which is dynamically loaded at run-time. The shared library is located in `/usr/lib/libvpnauthcustom.so` and we only have read permissions, how can we abuse this?
 
-Linux provides functionality for preloading libraries through `LD_PRELOAD` and `/etc/ld.so.preload`, preloading allows a user to suppler a library which is loaded before other libraries. If we create and compile a library with a function named `authenticate` can we hijack the execution of the binary?
+Linux provides functionality for preloading libraries through `LD_PRELOAD` and `/etc/ld.so.preload`, preloading allows a user to supply a library which is loaded before other libraries. If we create and compile a library with a function named `authenticate` can we hijack the execution of the binary?
 
 Here is rough (don't judge me!) sourcecode with a single function `authenticate` when called by the binary set the UID to 0 and calls system with `/bin/bash` giving us a root shell!  
 
@@ -77,7 +77,7 @@ Then we can abuse the log functionalilty to write the string '/tmp/preload.so' t
 
 ![alt text](https://ben0.github.io/assets/images//9009_write_ld_so_payload1.PNG "Abusing the -l switch")
 
-If you look at the last image, you can see the errors produced by `ld.so` which is responsible for finding and loading shared libraries. Any shared libraries can be specificed seperated by white spaces so it's a fairly relaxed syntax, there are plenty of errors where `ld.so` can't find the library specificed but it still finds our malicious shared library and is preloaded when a binary in run. 
+If you look at the last image, you can see the errors produced by `ld.so` which is responsible for finding and loading shared libraries. Any shared libraries specified can be seperated by white spaces so it's a fairly relaxed syntax, there are plenty of errors where `ld.so` can't find the library specificed but it still finds our malicious shared library and is preloaded when a binary in run. 
 
 We've created and compiled a shared object library, abused the vpn_connect binary to add our library to `ld.so.preload`, running the binary now we get a shell as root!
 

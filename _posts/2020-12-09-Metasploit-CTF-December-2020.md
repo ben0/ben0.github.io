@@ -38,7 +38,7 @@ The notable system calls here are `umask` which sets the file creation mask, the
 
 As the binary is running as root we effectively have an arbitrary write to any file with the username and password which we control as well as the other junk, great! Here I tried to write to `/etc/passwd` or `/etc/shadow` but I couldn't get the format correct and I decided to get a root shell instead :-)
 
-### Privilege escalation
+### Privilege Escalation
 
 The binary uses a shared library to provide the `authenticate` function which is dynamically loaded at run-time. The shared library is located in `/usr/lib/libvpnauthcustom.so` and we only have read permissions, how can we abuse this?
 

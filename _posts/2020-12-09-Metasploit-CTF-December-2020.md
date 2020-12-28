@@ -21,7 +21,7 @@ Using NM to list the symbol table in the binary, grepping for 'T' or 't' to filt
 
 ![alt text](https://ben0.github.io/assets/images//9009_nm.PNG "Binary symbols")
 
-Running the binary we're prompted with usage instructions, the binary requires three parameters, username, password, and a log path. Let see if we can get the username & password using GDB, I use pwndbg which is pretty great for any sort of reverse engineering, I highly recommened it. You can set the binary arguments, and set a breakpoint on the `authenticate` function to stop execution and return control back:
+Running the binary we're prompted with usage instructions, the binary requires three parameters, username, password, and a log path. Let see if we can get the username & password using GDB, I use GDB with Pwndbg which is pretty great for any sort of reverse engineering, I highly recommened it. With GDB I define the arguments to execute with and set a breakpoint on the `authenticate` function to stop execution and return control back when the execution flow his this function:
 
 ![alt text](https://ben0.github.io/assets/images//9009_gdbstart.PNG "GDB")
 
@@ -34,7 +34,7 @@ Excellent, now we know the username and password surely we'll get the flag, let'
 
 ![alt text](https://ben0.github.io/assets/images//9009_strace.PNG "System trace")
 
-The notable system calls here are `umask` which sets the file creation mask, then `openat` to get a file descriptor with the flags 'O_WRONLY | O_CREAT', write only or create if the file doesn't exist, then we see a few `write` calls with logging information followed by a `close` on the file descriptor.
+The notable system calls here are `umask` which sets the file creation mask, then `openat` to get a file descriptor with the flags `O_WRONLY | O_CREAT`, write only or create if the file doesn't exist, then we see a few `write` calls with logging information followed by a `close` on the file descriptor.
 
 As the binary is running as root, it's effectively an arbitrary write, the contents include the username and password which we control, great! Here I tried to write to `/etc/passwd` or `/etc/shadow` but I couldn't get the format correct, this is where I decided to get a root shell instead :-)
 
@@ -44,7 +44,7 @@ The binary uses a shared library to provide the `authenticate` function which is
 
 Linux provides functionality for preloading libraries through `LD_PRELOAD` environment variable or `/etc/ld.so.preload`, preloading allows a user to supply a shared library which is loaded before other libraries. If I create and compile a library with a function named `authenticate` can I hijack the execution of the binary?
 
-Here is rough (don't judge me!) sourcecode with a single function `authenticate` when called by the binary will set the UID to 0 and call the system function with argument `/bin/bash` giving us a root shell!  
+Here is rough (don't judge me!) sourcecode with a single function `authenticate` when called by the binary will set the UID to 0 and call the system function with argument `/bin/bash` giving us a root shell!
 
 ```
 cat > /tmp/exploit.c << "EOF"

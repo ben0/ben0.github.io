@@ -11,21 +11,21 @@ The challenge begins with an SSH server listening on port 9009, after connecting
 
 ![alt text](https://ben0.github.io/assets/images//9009_sshlogin.PNG "SSH port 9009")
 
-After light enumeration I find the flag ```/etc/ace_of_spades.jpg``` readable as root only, a binary ```/opt/vpn_connect``` with set user ID on execution, and the owner root - this must be the path to flag.
+After light enumeration I find the flag `/etc/ace_of_spades.jpg` readable as root only, a binary `/opt/vpn_connect` with set user ID on execution, and the owner root - this must be the path to flag.
 
-First let us see if the binary has any dependencies, using ldd we can see what shared objects are required by the binary, and this particular binary requires the library ```/usr/lib/libvpnauthcustom.so``` to run.
+First let us see if the binary has any dependencies, using ldd will help identify what shared objects are required by the binary, and this particular binary requires the library `/usr/lib/libvpnauthcustom.so` to run.
 
 ![alt text](https://ben0.github.io/assets/images//9009_ldd.PNG "Library dependencies")
 
-Using NM we can list the symbols in the binary or shared library, grepping for 'T' or 't' to filter on symbols in the data section. You could say the symbols are mapping between the functions and the instructions within the binary that may be used during execution.
+Using NM to list the symbol table in the binary or shared library, grepping for 'T' or 't' to filter on symbols in the data section. You could say the symbols are mapping between the functions and the instructions within the binary that may be used during execution.
 
 ![alt text](https://ben0.github.io/assets/images//9009_nm.PNG "Binary symbols")
 
-Running the binary we're prompted with usage instructions, the binary requires three parameters, username, password, and a log path. Let see if we can get the username & password using GDB, I use pwndbg which is pretty great for any sort of reverse engineering, I highly recommened it. You can set the binary arguments, and set a breakpoint on the ```authenticate``` function to stop execution and return control back:
+Running the binary we're prompted with usage instructions, the binary requires three parameters, username, password, and a log path. Let see if we can get the username & password using GDB, I use pwndbg which is pretty great for any sort of reverse engineering, I highly recommened it. You can set the binary arguments, and set a breakpoint on the `authenticate` function to stop execution and return control back:
 
 ![alt text](https://ben0.github.io/assets/images//9009_gdbstart.PNG "GDB")
 
-Now I can step a few instructions to the call to string compare function where our user supplied input is being compared to the string ```username``` - this must be the username! Repeating this process I also get the password.
+Now I can step a few instructions to the call to string compare function where our user supplied input is being compared to the string `username` - this must be the username! Repeating this process I also get the password.
 
 ![alt text](https://ben0.github.io/assets/images//9009_gdbusername.PNG "GDB")
 ![alt text](https://ben0.github.io/assets/images//9009_gdbpassword.PNG "GDB")

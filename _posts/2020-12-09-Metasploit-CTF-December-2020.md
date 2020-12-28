@@ -38,7 +38,7 @@ The notable system calls here are `umask` which sets the file creation mask, the
 
 As the binary is running as root, it's effectively an arbitrary write, the contents include the username and password which we control, great! Here I tried to write to `/etc/passwd` or `/etc/shadow` but I couldn't get the format correct, this is where I decided to get a root shell instead :-)
 
-### Privilege escalation
+### Privilege Escalation
 
 The binary uses a shared library to provide the `authenticate` function which is dynamically loaded at run-time. The shared library is located in `/usr/lib/libvpnauthcustom.so` and we only have read permissions, how can this be abused?
 
@@ -77,7 +77,7 @@ Then I can abuse the log functionalilty to write the string '/tmp/preload.so' to
 
 ![alt text](https://ben0.github.io/assets/images//9009_write_ld_so_payload1.PNG "Abusing the -l switch")
 
-If you look at the last image, you can see the errors produced by `ld.so` which is responsible for finding and loading shared libraries. Any shared libraries can be specificed seperated by white spaces so it's a fairly relaxed syntax, there are plenty of errors where `ld.so` can't find the library specificed but it still finds our malicious shared library and is preloaded when a binary in run. 
+If you look at the last image, you can see the errors produced by `ld.so` which is responsible for finding and loading shared libraries. Any shared libraries specified can be seperated by white spaces so it's a fairly relaxed syntax, there are plenty of errors where `ld.so` can't find the library specificed but it still finds our malicious shared library and is preloaded when a binary in run. 
 
 I've created and compiled a shared object library, abused the function `log_res` in the binary 'vpn_connect' to add the shared library to `ld.so.preload`, then execute the `vpn_connect` binary again, the malicious shared library is loaded, which calls the `authenticate` function in our library rather the intended library, this then uses the system call to replace the current process with `/bin/bash`!
 
@@ -86,7 +86,7 @@ I've created and compiled a shared object library, abused the function `log_res`
 
 ### Next steps
 
-The shared object isn't perfect, but could be improve by removing some of the printf statements and deleting `/etc/ld.so.preload` file  to stop those nagging error messages:
+The shared object isn't perfect, but could be improve by removing some of the printf statements and deleting the file `/etc/ld.so.preload` to stop those nagging error messages:
 
 ```
 #include <stdio.h>

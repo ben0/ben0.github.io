@@ -3,7 +3,7 @@ layout: single
 title: "Metasploit CTF: 'Ace of Clubs'"
 ---
 
-Over the last weekend I had a little time to participate in the Metasploit CTF 2020, and one particular challenge I found quite interesting mainly becuase the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...
+During the weekend of the 5th December I had a little time to participate in the Metasploit CTF 2020, one particular challenge I found quite interesting mainly because the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...
 
 ## Challenge: Ace of Clubs
 
@@ -17,7 +17,7 @@ First lets see if the binary has any dependencies, using ldd we can see what sha
 
 ![alt text](https://ben0.github.io/assets/images//9009_ldd.PNG "Library dependencies")
 
-Using NM we can list the symbols in the files, grepping for T or t, symbols in the data section.
+Using NM we can list the symbols in the binary or shared library, grepping for 'T' or 't' to only symbols in the data section.
 
 ![alt text](https://ben0.github.io/assets/images//9009_nm.PNG "Binary symbols")
 

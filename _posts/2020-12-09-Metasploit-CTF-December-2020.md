@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Metasploit CTF: 'Ace of Clubs'"
+title: "Metasploit CTF : 'Ace of Clubs'"
 ---
 
 During the weekend of the 5th December I had a little time to participate in the Metasploit CTF 2020, one particular challenge I found quite interesting, this was mainly because the route I decided to take was probably a little different and a lot more involved but I wanted to test myself! So let's crack on...
@@ -73,7 +73,7 @@ Here I compile the source code into a shared object:
 
 ![alt text](https://ben0.github.io/assets/images//9009_payload_compile.PNG "Compiling exploit.c")
 
-Then I can abuse the log functionalilty to write the string '/tmp/preload.so' to `/etc/ld.so.preload`:
+Then I can abuse the log functionalilty to write the string '/tmp/preload.so' to the file `/etc/ld.so.preload`:
 
 ![alt text](https://ben0.github.io/assets/images//9009_write_ld_so_payload1.PNG "Abusing the -l switch")
 

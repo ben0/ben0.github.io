@@ -86,7 +86,7 @@ I've created and compiled a shared object library, abused the function `log_res`
 
 ### Next steps
 
-The shared object isn't perfect, but we could improve it by removing some of the printf statements and deleting `/etc/ld.so.preload` to stop those nagging error messages:
+The shared object isn't perfect, but could be improve by removing some of the printf statements and deleting `/etc/ld.so.preload` file  to stop those nagging error messages:
 
 ```
 #include <stdio.h>

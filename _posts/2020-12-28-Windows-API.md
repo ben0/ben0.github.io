@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Playing with AMSI"
+title: "Exploring Windows API with PowerShell & C#"
 ---
 
 ## Anti-Malware Scanning Interface

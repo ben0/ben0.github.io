@@ -350,3 +350,5 @@ function CreateProcessWithToken {
 ```
 
 With this inline C# it's possible to get the token of another process, duplicate it and then create a new process with the privileges of that token. Neat!
+
+Check out my Github repo for more examples...

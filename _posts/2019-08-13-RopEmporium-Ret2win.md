@@ -11,25 +11,25 @@ All the challenges are hosted on the website [here](https://ropemporium.com/), t
 
 The description for ret2win starts with "ret2win means 'return here to win'" - sounds simple, right?
 
-Running the binary it mentions trying to fit 56 bytes into 32 bytes of stack buffer, whats the problem with this? We know that the stack grows down from higher addresses to lower addresses, and when a function prolog occurs, space is reserved on the stack for local variables.
+Running the binary it mentions trying to fit 56 bytes into 32 bytes of stack buffer, what's the problem with this? We know that the stack grows down from higher addresses to lower addresses, and when a function prolog occurs, space is reserved on the stack for local variables, in this case only 32 bytes.
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-intro.PNG "Running the binary ret2win")
 
-If we execute the binary with more than 32 characters what'll happen? Let's try with 48 characters...
+Let's try with 48 characters...
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-overflow.PNG "Overflowing the buffer")
 
-Yep, we overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes of variable space allocated. Our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, then the return instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults!
+We overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes of variable space allocated. Our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, then the return instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults.
 
-When the read() function stores the data on the stack it starts from lower addresses and works to high addresses, overwriting any existing data in memory as it goes...
+When the read() function stores the data on the stack, it begins at the lowest address and works up to the highest address, and if the input data exceeds the space allocated to the variable, then any data on the stack such as saved registers, or return pointers will be overwritten...
 
-Before we move on it's handy to enumerate the binary, we'll use NM to understand the symbols or functions within the binary, and Rabin2 to see what mitigations are enabled.
+Before we move on it's handy to enumerate the binary, we'll use `NM` to understand the symbols or functions within the binary, and `Rabin2` to see what mitigations are enabled.
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-nm.PNG "Symbols within the binary")
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-rabin2.PNG "Mitigations")
 
-Within the binary there are a few functions, including one called `ret2win` at address `0x0000000000400756`. This functions contains a `mov edi,0x400943` then `call 400560 <system@plt>`, lets see what string is being moved into edi from address `0x400983` - Rabin2 is great for analysing strings in binaries.
+Within the binary there are a few functions, including one called `ret2win` at address `0x0000000000400756`. This function contains a `mov edi,0x400943` instruction, then a `call 400560 <system@plt>`, lets see what string is being moved into the EDI register from address `0x400983` - Rabin2 is great for analysing strings in binaries.
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-objdump-ret2win.PNG "Ret2win function disassembled")
 

@@ -5,13 +5,13 @@ title: "RopEmporium - Ret2win"
 
 I recently came across Rop Emporium and I thought I'd give it a go and post my progress! Let's jump in...
 
-All the challenges are hosted on the website [here](https://ropemporium.com/), there is also a guide with plenty of useful information, tools and techniques that be used during the challenges.
+All the challenges are hosted on the website [here](https://ropemporium.com/), there is also a guide with plenty of useful information, tools and techniques that can be used during the challenges.
 
 # ret2win
 
 The description for ret2win starts with "ret2win means 'return here to win'" - sounds simple, right?
 
-Running the binary it mentions trying to fit 56 bytes into 32 bytes of stack buffer, whats the problem with this? We know that the stack grows down from higher addresses to lower addresses, and when a function prolog takes place it reserves space on the stack for local variables.
+Running the binary it mentions trying to fit 56 bytes into 32 bytes of stack buffer, whats the problem with this? We know that the stack grows down from higher addresses to lower addresses, and when a function prolog occurs, space is reserved on the stack for local variables.
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-intro.PNG "Running the binary ret2win")
 
@@ -19,7 +19,7 @@ If we execute the binary with more than 32 characters what'll happen? Let's try 
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-overflow.PNG "Overflowing the buffer")
 
-Yep, we overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes of variable space allocated. Our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, and the ret instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults!
+Yep, we overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes of variable space allocated. Our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, then the return instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults!
 
 When the read() function stores the data on the stack it starts from lower addresses and works to high addresses, overwriting any existing data in memory as it goes...
 

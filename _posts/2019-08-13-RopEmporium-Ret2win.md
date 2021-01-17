@@ -5,9 +5,9 @@ title: "RopEmporium - Ret2win"
 
 I recently came across Rop Emporium and I thought I'd give it a go and post my progress! Let's jump in...
 
-All the challenges are hosted on the site https://ropemporium.com/, there is also a guide with plenty of useful information, tools and techniques that be used during the challenges.
+All the challenges are hosted on the website [here](https://ropemporium.com/), there is also a guide with plenty of useful information, tools and techniques that be used during the challenges.
 
-# ret2win - https://ropemporium.com/challenge/ret2win.html
+# ret2win
 
 The description for ret2win starts with "ret2win means 'return here to win'" - sounds simple, right?
 

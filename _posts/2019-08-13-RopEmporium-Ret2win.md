@@ -19,7 +19,7 @@ If we execute the binary with more than 32 characters what'll happen? Let's try 
 
 ![alt text](https://ben0.github.io/assets/images/ret2win-overflow.PNG "Overflowing the buffer")
 
-Yep, we overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes variable space allocated, our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, and the ret instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults!
+Yep, we overflowed the buffer and caused the binary to segfault. Why? The call to read() accepts upto 56 bytes, which is 24 more than the 32 bytes of variable space allocated. Our input is accepted pushing the data onto the stack, the 'pwnme' function wraps up, and the ret instruction then pops the next 8 bytes off the stack which is 'AAAAAAAA', because this isn't a valid memory address, it segfaults!
 
 When the read() function stores the data on the stack it starts from lower addresses and works to high addresses, overwriting any existing data in memory as it goes...
 
